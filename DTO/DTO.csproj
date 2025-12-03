@@ -7,8 +7,8 @@
     <ProjectGuid>{849D444B-BDF5-46CE-A76F-4A4632D35BD7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DTO</RootNamespace>
-    <AssemblyName>DTO</AssemblyName>
+    <RootNamespace>AWEElectronics.DTO</RootNamespace>
+    <AssemblyName>AWEElectronics.DTO</AssemblyName>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,6 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Address.cs" />
+    <Compile Include="CartItem.cs" />
+    <Compile Include="Category.cs" />
+    <Compile Include="Customer.cs" />
+    <Compile Include="InventoryDetail.cs" />
+    <Compile Include="InventoryTransaction.cs" />
+    <Compile Include="LoginResult.cs" />
+    <Compile Include="Order.cs" />
+    <Compile Include="OrderDetail.cs" />
+    <Compile Include="Payment.cs" />
+    <Compile Include="Product.cs" />
+    <Compile Include="SalesReport.cs" />
+    <Compile Include="Supplier.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
