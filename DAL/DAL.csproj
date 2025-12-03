@@ -7,8 +7,8 @@
     <ProjectGuid>{AA530FCF-0E48-4A69-96FC-4BBC0C4680A1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DAL</RootNamespace>
-    <AssemblyName>DAL</AssemblyName>
+    <RootNamespace>AWEElectronics.DAL</RootNamespace>
+    <AssemblyName>AWEElectronics.DAL</AssemblyName>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,6 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CategoryDAL.cs" />
+    <Compile Include="DatabaseConfig.cs" />
+    <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="InventoryTransactionDAL.cs" />
+    <Compile Include="OrderDAL.cs" />
+    <Compile Include="OrderDetailDAL.cs" />
+    <Compile Include="PaymentDAL.cs" />
+    <Compile Include="ProductDAL.cs" />
+    <Compile Include="ReportDAL.cs" />
+    <Compile Include="SupplierDAL.cs" />
+    <Compile Include="UserDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
