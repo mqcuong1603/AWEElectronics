@@ -1,0 +1,148 @@
+@model List<AWEElectronics.DTO.Product>
+
+@{
+    ViewBag.Title = "Products";
+}
+
+<div class="page-header">
+    <h2><i class="fas fa-box"></i> Products</h2>
+    <p class="text-muted">Browse and search all products in the system</p>
+</div>
+
+<hr />
+
+<!-- Search Bar -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("Index", "Products", FormMethod.Get, new { @class = "form-inline" }))
+                {
+                    <div class="input-group" style="width: 100%;">
+                        <input type="text" name="search" class="form-control" placeholder="Search by product name or SKU..." value="@ViewBag.SearchQuery" />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+                            @if (!string.IsNullOrEmpty(ViewBag.SearchQuery))
+                            {
+                                <a href="@Url.Action("Index", "Products")" class="btn btn-secondary"><i class="fas fa-times"></i> Clear</a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Summary -->
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            @if (!string.IsNullOrEmpty(ViewBag.SearchQuery))
+            {
+                <span>Found <strong>@ViewBag.TotalProducts</strong> product(s) matching "@ViewBag.SearchQuery"</span>
+            }
+            else
+            {
+                <span>Showing all <strong>@ViewBag.TotalProducts</strong> products</span>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Products Table -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock Level</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in Model)
+                                {
+                                    <tr>
+                                        <td><strong>@product.SKU</strong></td>
+                                        <td>@product.Name</td>
+                                        <td><span class="badge badge-secondary">@product.CategoryName</span></td>
+                                        <td class="text-success"><strong>$@product.Price.ToString("N2")</strong></td>
+                                        <td>
+                                            @if (product.StockLevel <= 10)
+                                            {
+                                                <span class="badge badge-danger">@product.StockLevel (Low)</span>
+                                            }
+                                            else if (product.StockLevel <= 50)
+                                            {
+                                                <span class="badge badge-warning">@product.StockLevel</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-success">@product.StockLevel</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (product.IsPublished)
+                                            {
+                                                <span class="badge badge-success"><i class="fas fa-check"></i> Published</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-secondary"><i class="fas fa-times"></i> Draft</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Details", "Products", new { id = product.ProductID })" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning text-center">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p class="mb-0">No products found.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        margin-bottom: 20px;
+    }
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .badge {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+</style>
+
+@section scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+}
