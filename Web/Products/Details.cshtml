@@ -1,0 +1,172 @@
+@model AWEElectronics.DTO.Product
+
+@{
+    ViewBag.Title = "Product Details";
+}
+
+<div class="page-header">
+    <h2><i class="fas fa-box"></i> Product Details</h2>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Products")">Products</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Product Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Product ID:</strong></div>
+                    <div class="col-md-8">@Model.ProductID</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>SKU:</strong></div>
+                    <div class="col-md-8"><span class="badge badge-dark">@Model.SKU</span></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Product Name:</strong></div>
+                    <div class="col-md-8"><h5>@Model.Name</h5></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Category:</strong></div>
+                    <div class="col-md-8"><span class="badge badge-secondary">@Model.CategoryName</span></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Supplier:</strong></div>
+                    <div class="col-md-8">@(Model.SupplierName ?? "N/A")</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Price:</strong></div>
+                    <div class="col-md-8"><h4 class="text-success">$@Model.Price.ToString("N2")</h4></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Specifications:</strong></div>
+                    <div class="col-md-8">
+                        @if (!string.IsNullOrEmpty(Model.Specifications))
+                        {
+                            <p>@Model.Specifications</p>
+                        }
+                        else
+                        {
+                            <em class="text-muted">No specifications available</em>
+                        }
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Published Status:</strong></div>
+                    <div class="col-md-8">
+                        @if (Model.IsPublished)
+                        {
+                            <span class="badge badge-success"><i class="fas fa-check-circle"></i> Published</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-secondary"><i class="fas fa-times-circle"></i> Draft</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Stock Information Card -->
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-warehouse"></i> Stock Information</h5>
+            </div>
+            <div class="card-body text-center">
+                <h6 class="text-muted">Current Stock Level</h6>
+                @if (Model.StockLevel <= 10)
+                {
+                    <h1 class="text-danger display-3">@Model.StockLevel</h1>
+                    <div class="alert alert-danger mt-3">
+                        <i class="fas fa-exclamation-triangle"></i> <strong>Low Stock Alert!</strong>
+                    </div>
+                }
+                else if (Model.StockLevel <= 50)
+                {
+                    <h1 class="text-warning display-3">@Model.StockLevel</h1>
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-circle"></i> Moderate stock level
+                    </div>
+                }
+                else
+                {
+                    <h1 class="text-success display-3">@Model.StockLevel</h1>
+                    <div class="alert alert-success mt-3">
+                        <i class="fas fa-check-circle"></i> Stock level is good
+                    </div>
+                }
+                <p class="text-muted">Units Available</p>
+            </div>
+        </div>
+
+        <!-- Quick Stats Card -->
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Quick Stats</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <small class="text-muted">Total Value</small>
+                    <h5 class="text-primary">$@((Model.Price * Model.StockLevel).ToString("N2"))</h5>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Status</small>
+                    <h6>
+                        @if (Model.StockLevel > 0)
+                        {
+                            <span class="badge badge-success">In Stock</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">Out of Stock</span>
+                        }
+                    </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="@Url.Action("Index", "Products")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Products
+        </a>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        margin-bottom: 20px;
+    }
+    .breadcrumb {
+        background-color: #f8f9fa;
+        padding: 10px 15px;
+        border-radius: 5px;
+    }
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .display-3 {
+        font-size: 4rem;
+        font-weight: 300;
+    }
+</style>
+
+@section scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+}
