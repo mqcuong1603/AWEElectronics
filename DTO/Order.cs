@@ -14,11 +14,15 @@ namespace AWEElectronics.DTO
         public decimal Tax { get; set; }
         public decimal GrandTotal { get; set; }
         public string Status { get; set; } // Pending, Processing, Shipped, Delivered, Cancelled
+        public string PaymentStatus { get; set; } // Pending, Paid, Failed
         public DateTime OrderDate { get; set; }
+        public DateTime? EstimatedDeliveryDate { get; set; }
+        public string Notes { get; set; }
 
         // Navigation properties for display
         public string CustomerName { get; set; }
         public string CustomerEmail { get; set; }
+        public string CustomerPhone { get; set; }
         public string StaffName { get; set; }
         public string ShippingAddress { get; set; }
 

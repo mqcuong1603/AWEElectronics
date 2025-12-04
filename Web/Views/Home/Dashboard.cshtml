@@ -1,0 +1,331 @@
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<!-- Welcome Banner -->
+<div class="row mb-4 fade-in">
+    <div class="col-12">
+        <div class="card border-0 bg-gradient-primary text-white shadow-lg">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2 class="mb-2"><i class="fas fa-home me-2"></i>Welcome back, @Session["FullName"]!</h2>
+                        <p class="mb-0 opacity-75">
+                            <i class="fas fa-calendar-alt me-2"></i>@DateTime.Now.ToString("dddd, MMMM dd, yyyy")
+                            <span class="ms-3"><i class="fas fa-clock me-2"></i>@DateTime.Now.ToString("hh:mm tt")</span>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end d-none d-md-block">
+                        <i class="fas fa-chart-line fa-4x opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="fas fa-exclamation-circle me-2"></i>@ViewBag.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3 slide-up" style="animation-delay: 0.1s">
+        <div class="card border-left-primary shadow-sm h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-2">
+                            <i class="fas fa-dollar-sign me-1"></i> Total Revenue (YTD)
+                        </div>
+                        <div class="stat-number mb-0">
+                            $@ViewBag.TotalRevenue?.ToString("N2")
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-arrow-up text-success me-1"></i> Year to Date
+                        </small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                            <i class="fas fa-dollar-sign fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3 slide-up" style="animation-delay: 0.2s">
+        <div class="card border-left-success shadow-sm h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-2">
+                            <i class="fas fa-shopping-cart me-1"></i> Total Orders (YTD)
+                        </div>
+                        <div class="stat-number mb-0">
+                            @ViewBag.TotalOrders
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-calendar-check me-1"></i> All Time
+                        </small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                            <i class="fas fa-shopping-cart fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3 slide-up" style="animation-delay: 0.3s">
+        <div class="card border-left-info shadow-sm h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-2">
+                            <i class="fas fa-calendar-day me-1"></i> Today's Revenue
+                        </div>
+                        <div class="stat-number mb-0">
+                            $@ViewBag.TodayRevenue?.ToString("N2")
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-shopping-bag me-1"></i> @ViewBag.TodayOrders orders
+                        </small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                            <i class="fas fa-calendar-day fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3 slide-up" style="animation-delay: 0.4s">
+        <div class="card border-left-warning shadow-sm h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-2">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Low Stock Items
+                        </div>
+                        <div class="stat-number mb-0">
+                            @ViewBag.LowStockCount
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-box me-1"></i> Needs Attention
+                        </small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                            <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Orders by Status -->
+    <div class="col-md-6 mb-4 fade-in" style="animation-delay: 0.5s">
+        <div class="card shadow-lg border-0 h-100">
+            <div class="card-header py-3 d-flex align-items-center">
+                <i class="fas fa-chart-pie me-2"></i>
+                <h6 class="m-0 font-weight-bold">Orders by Status</h6>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.OrdersByStatus != null)
+                {
+                    var ordersByStatus = ViewBag.OrdersByStatus as Dictionary<string, int>;
+                    var total = ordersByStatus.Values.Sum();
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <tbody>
+                                @foreach (var status in ordersByStatus)
+                                {
+                                    var percentage = total > 0 ? (status.Value * 100.0 / total) : 0;
+                                    <tr>
+                                        <td style="width: 30%">
+                                            <span class="badge 
+                                                @(status.Key == "Pending" ? "bg-warning" : 
+                                                  status.Key == "Processing" ? "bg-info" : 
+                                                  status.Key == "Shipped" ? "bg-primary" : 
+                                                  status.Key == "Delivered" ? "bg-success" : "bg-danger")">
+                                                @status.Key
+                                            </span>
+                                        </td>
+                                        <td style="width: 50%">
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar 
+                                                    @(status.Key == "Pending" ? "bg-warning" : 
+                                                      status.Key == "Processing" ? "bg-info" : 
+                                                      status.Key == "Shipped" ? "bg-primary" : 
+                                                      status.Key == "Delivered" ? "bg-success" : "bg-danger")" 
+                                                     role="progressbar" 
+                                                     style="width: @percentage.ToString("0.0")%"
+                                                     aria-valuenow="@status.Value" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="@total">
+                                                    @percentage.ToString("0")%
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-end" style="width: 20%">
+                                            <strong>@status.Value</strong> orders
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Selling Products -->
+    <div class="col-md-6 mb-4 fade-in" style="animation-delay: 0.6s">
+        <div class="card shadow-lg border-0 h-100">
+            <div class="card-header py-3 d-flex align-items-center">
+                <i class="fas fa-trophy me-2"></i>
+                <h6 class="m-0 font-weight-bold">Top Selling Products</h6>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.TopProducts != null)
+                {
+                    var topProducts = ViewBag.TopProducts as List<AWEElectronics.DTO.ProductSalesReport>;
+                    if (topProducts != null && topProducts.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @for (int i = 0; i < topProducts.Count; i++)
+                            {
+                                var product = topProducts[i];
+                                var rankBadgeClass = i == 0 ? "bg-warning" : i == 1 ? "bg-secondary" : "bg-info";
+                                <div class="list-group-item border-0 px-0">
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge @rankBadgeClass rounded-circle me-3" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                            @(i + 1)
+                                        </span>
+                                        <div class="flex-grow-1">
+                                            <strong>@product.ProductName</strong>
+                                            <br />
+                                            <small class="text-muted">
+                                                <i class="fas fa-box me-1"></i>@product.QuantitySold units sold
+                                            </small>
+                                        </div>
+                                        <div class="text-end">
+                                            <strong class="text-success">$@product.TotalRevenue.ToString("N2")</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-3x mb-3 opacity-25"></i>
+                            <p>No sales data available.</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row fade-in" style="animation-delay: 0.7s">
+    <div class="col-12">
+        <div class="card shadow-lg border-0">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center g-3">
+                    <div class="col-md-3 col-6">
+                        <a href="@Url.Action("Index", "Products")" class="btn btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="min-height: 120px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px;">
+                            <i class="fas fa-box fa-3x mb-3"></i>
+                            <span class="fw-bold">View Products</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="@Url.Action("Index", "Orders")" class="btn btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="min-height: 120px; background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%); color: white; border-radius: 15px;">
+                            <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                            <span class="fw-bold">View Orders</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="@Url.Action("Index", "Reports")" class="btn btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="min-height: 120px; background: linear-gradient(135deg, #36b9cc 0%, #258391 100%); color: white; border-radius: 15px;">
+                            <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                            <span class="fw-bold">Sales Reports</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="@Url.Action("Profile", "Account")" class="btn btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="min-height: 120px; background: linear-gradient(135deg, #f6c23e 0%, #dda20a 100%); color: white; border-radius: 15px;">
+                            <i class="fas fa-user fa-3x mb-3"></i>
+                            <span class="fw-bold">My Profile</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .border-left-primary {
+            border-left: 4px solid #4e73df !important;
+        }
+        .border-left-success {
+            border-left: 4px solid #1cc88a !important;
+        }
+        .border-left-info {
+            border-left: 4px solid #36b9cc !important;
+        }
+        .border-left-warning {
+            border-left: 4px solid #f6c23e !important;
+        }
+        .text-gray-800 {
+            color: #5a5c69 !important;
+        }
+        .text-gray-300 {
+            color: #dddfeb !important;
+        }
+
+        /* Custom Styles */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        .slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+        @@keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @@keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+}

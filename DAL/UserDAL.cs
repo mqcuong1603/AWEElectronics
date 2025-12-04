@@ -10,7 +10,8 @@ namespace AWEElectronics.DAL
     {
         public User GetByUsername(string username)
         {
-            string query = "SELECT * FROM Users WHERE Username = @Username";
+            // Make username lookup case-insensitive
+            string query = "SELECT * FROM Users WHERE LOWER(Username) = LOWER(@Username)";
             SqlParameter[] parameters = { new SqlParameter("@Username", username) };
 
             DataTable dt = DatabaseHelper.ExecuteQuery(query, parameters);

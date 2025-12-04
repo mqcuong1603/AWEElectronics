@@ -1,0 +1,266 @@
+@{
+    ViewBag.Title = "Staff Dashboard";
+}
+
+<style>
+    /* Staff Dashboard Specific Styles - GREEN THEME */
+    .bg-gradient-staff {
+        background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%) !important;
+    }
+</style>
+
+<!-- STAFF DASHBOARD MARKER -->
+<div class="alert alert-success mb-4">
+    <strong>?? STAFF DASHBOARD</strong> - You are viewing the Staff operations panel
+</div>
+
+<!-- Staff Welcome Banner -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 bg-gradient-staff text-white shadow-lg">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2 class="mb-2">
+                            <i class="fas fa-user-check me-2"></i>
+                            ? Staff Dashboard - Welcome @Session["FullName"]!
+                        </h2>
+                        <p class="mb-0 opacity-75">
+                            <i class="fas fa-tasks me-2"></i>Order Management & Inventory Control
+                            <span class="ms-3"><i class="fas fa-calendar-alt me-2"></i>@DateTime.Now.ToString("dddd, MMMM dd, yyyy")</span>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end d-none d-md-block">
+                        <i class="fas fa-clipboard-list fa-4x opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Staff Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card border-left-info shadow-sm h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-2">
+                            <i class="fas fa-calendar-day me-1"></i> Today's Orders
+                        </div>
+                        <div class="stat-number mb-0">
+                            @ViewBag.TodayOrders
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-dollar-sign me-1"></i> $@ViewBag.TodayRevenue?.ToString("N2")
+                        </small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                            <i class="fas fa-shopping-bag fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card border-left-warning shadow-sm h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-2">
+                            <i class="fas fa-hourglass-half me-1"></i> Pending Orders
+                        </div>
+                        <div class="stat-number mb-0">
+                            @(ViewBag.PendingOrders != null ? ((List<AWEElectronics.DTO.Order>)ViewBag.PendingOrders).Count : 0)
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-exclamation-circle me-1"></i> Needs Action
+                        </small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                            <i class="fas fa-hourglass-half fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card border-left-danger shadow-sm h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-2">
+                            <i class="fas fa-exclamation-triangle me-1"></i> Low Stock Alert
+                        </div>
+                        <div class="stat-number mb-0">
+                            @ViewBag.LowStockCount
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-box me-1"></i> Reorder Soon
+                        </small>
+                    </div>
+                    <div class="col-auto">
+                        <div class="rounded-circle bg-danger bg-opacity-10 p-3">
+                            <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Staff Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-lg border-0">
+            <div class="card-header py-3 bg-success text-white">
+                <h6 class="m-0 font-weight-bold">
+                    <i class="fas fa-tasks me-2"></i>?? STAFF OPERATIONS - Quick Actions (STAFF ONLY)
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center g-3">
+                    <div class="col-md-4 col-6">
+                        <a href="@Url.Action("Index", "Orders")" class="btn btn-success btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="min-height: 100px;">
+                            <i class="fas fa-list-alt fa-2x mb-2"></i>
+                            <span class="fw-bold">View All Orders</span>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-6">
+                        <a href="@Url.Action("Index", "Products")" class="btn btn-primary btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="min-height: 100px;">
+                            <i class="fas fa-boxes fa-2x mb-2"></i>
+                            <span class="fw-bold">Manage Inventory</span>
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <a href="@Url.Action("Index", "Reports")" class="btn btn-info btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="min-height: 100px;">
+                            <i class="fas fa-chart-line fa-2x mb-2"></i>
+                            <span class="fw-bold">Sales Reports</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Pending Orders List -->
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-lg border-0">
+            <div class="card-header py-3 d-flex align-items-center justify-content-between bg-warning text-dark">
+                <div>
+                    <i class="fas fa-clock me-2"></i>
+                    <h6 class="m-0 font-weight-bold d-inline">? Pending Orders - Needs Processing</h6>
+                </div>
+                <span class="badge bg-dark">@(ViewBag.PendingOrders != null ? ((List<AWEElectronics.DTO.Order>)ViewBag.PendingOrders).Count : 0) Pending</span>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.PendingOrders != null)
+                {
+                    var pendingOrders = ViewBag.PendingOrders as List<AWEElectronics.DTO.Order>;
+                    if (pendingOrders != null && pendingOrders.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th><i class="fas fa-hashtag"></i> Order #</th>
+                                        <th><i class="fas fa-user"></i> Customer</th>
+                                        <th><i class="fas fa-calendar"></i> Date</th>
+                                        <th><i class="fas fa-dollar-sign"></i> Amount</th>
+                                        <th><i class="fas fa-cog"></i> Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in pendingOrders)
+                                    {
+                                        <tr>
+                                            <td><strong>@order.OrderCode</strong></td>
+                                            <td>@order.CustomerName</td>
+                                            <td>@order.OrderDate.ToString("MMM dd, yyyy")</td>
+                                            <td><strong class="text-success">$@order.GrandTotal.ToString("N2")</strong></td>
+                                            <td>
+                                                <a href="@Url.Action("Details", "Orders", new { id = order.OrderID })" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-check-circle fa-4x mb-3 text-success opacity-25"></i>
+                            <h5>All Caught Up!</h5>
+                            <p>No pending orders at the moment.</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Statistics -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-lg border-0 mb-4">
+            <div class="card-header py-3 d-flex align-items-center bg-light">
+                <i class="fas fa-chart-pie me-2"></i>
+                <h6 class="m-0 font-weight-bold">Orders by Status</h6>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.OrdersByStatus != null)
+                {
+                    var ordersByStatus = ViewBag.OrdersByStatus as Dictionary<string, int>;
+                    if (ordersByStatus != null)
+                    {
+                        foreach (var status in ordersByStatus)
+                        {
+                            var badgeClass = status.Key == "Pending" ? "bg-warning" : 
+                                           status.Key == "Processing" ? "bg-info" : 
+                                           status.Key == "Shipped" ? "bg-primary" : 
+                                           status.Key == "Delivered" ? "bg-success" : "bg-danger";
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge @badgeClass">@status.Key</span>
+                                <strong>@status.Value orders</strong>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Revenue Summary -->
+        <div class="card shadow-lg border-0">
+            <div class="card-header py-3 d-flex align-items-center bg-success text-white">
+                <i class="fas fa-money-bill-wave me-2"></i>
+                <h6 class="m-0 font-weight-bold">Revenue Summary</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <small class="text-muted">Year to Date</small>
+                    <h4 class="text-success mb-0">$@ViewBag.TotalRevenue?.ToString("N2")</h4>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Today</small>
+                    <h5 class="text-info mb-0">$@ViewBag.TodayRevenue?.ToString("N2")</h5>
+                </div>
+                <div>
+                    <small class="text-muted">Total Orders</small>
+                    <h5 class="text-primary mb-0">@ViewBag.TotalOrders</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

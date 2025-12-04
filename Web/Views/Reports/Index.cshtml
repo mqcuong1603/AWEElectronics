@@ -1,0 +1,299 @@
+@model List<AWEElectronics.DTO.SalesReport>
+
+@{
+    ViewBag.Title = "Sales Reports";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-chart-bar"></i> Sales Reports</h2>
+        <p class="text-muted">View sales performance and analytics</p>
+    </div>
+</div>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        @ViewBag.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Report Filter -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form method="get" action="@Url.Action("Index", "Reports")" class="row g-3">
+            <div class="col-md-3">
+                <label for="period" class="form-label">Report Period</label>
+                <select class="form-select" id="period" name="period" onchange="toggleCustomDates(this.value)">
+                    <option value="today" @(ViewBag.SelectedPeriod == "today" ? "selected" : "")>Today</option>
+                    <option value="week" @(ViewBag.SelectedPeriod == "week" ? "selected" : "")>This Week</option>
+                    <option value="month" @(ViewBag.SelectedPeriod == "month" ? "selected" : "")>This Month</option>
+                    <option value="year" @(ViewBag.SelectedPeriod == "year" ? "selected" : "")>This Year</option>
+                    <option value="custom" @(ViewBag.SelectedPeriod == "custom" ? "selected" : "")>Custom Range</option>
+                </select>
+            </div>
+            <div class="col-md-3" id="startDateGroup" style="display: @(ViewBag.SelectedPeriod == "custom" ? "block" : "none")">
+                <label for="startDate" class="form-label">From Date</label>
+                <input type="date" class="form-control" id="startDate" name="startDate" value="@ViewBag.StartDate">
+            </div>
+            <div class="col-md-3" id="endDateGroup" style="display: @(ViewBag.SelectedPeriod == "custom" ? "block" : "none")">
+                <label for="endDate" class="form-label">To Date</label>
+                <input type="date" class="form-control" id="endDate" name="endDate" value="@ViewBag.EndDate">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sync"></i> Generate Report
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Total Revenue
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            $@ViewBag.TotalRevenue?.ToString("N2")
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Orders
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            @ViewBag.TotalOrders
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Avg Order Value
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            $@ViewBag.AverageOrderValue?.ToString("N2")
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Items Sold
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            @ViewBag.TotalItems
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-box fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Daily Sales Table and Charts -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">@ViewBag.ReportTitle</h6>
+            </div>
+            <div class="card-body">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th class="text-center">Orders</th>
+                                    <th class="text-center">Items Sold</th>
+                                    <th class="text-end">Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var report in Model.OrderByDescending(r => r.Date))
+                                {
+                                    <tr>
+                                        <td>@report.Date.ToString("MMM dd, yyyy")</td>
+                                        <td class="text-center">@report.TotalOrders</td>
+                                        <td class="text-center">@report.TotalItemsSold</td>
+                                        <td class="text-end"><strong>$@report.TotalRevenue.ToString("N2")</strong></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr>
+                                    <th>Total</th>
+                                    <th class="text-center">@ViewBag.TotalOrders</th>
+                                    <th class="text-center">@ViewBag.TotalItems</th>
+                                    <th class="text-end"><strong>$@ViewBag.TotalRevenue?.ToString("N2")</strong></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No sales data available for the selected period.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Top Products -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Top Selling Products</h6>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.TopProducts != null)
+                {
+                    var topProducts = ViewBag.TopProducts as List<AWEElectronics.DTO.ProductSalesReport>;
+                    if (topProducts != null && topProducts.Any())
+                    {
+                        <table class="table table-sm">
+                            <tbody>
+                                @foreach (var product in topProducts.Take(10))
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@product.ProductName</strong>
+                                            <br />
+                                            <small class="text-muted">@product.QuantitySold units sold</small>
+                                        </td>
+                                        <td class="text-end">
+                                            $@product.TotalRevenue.ToString("N2")
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No product sales data available.</p>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Orders by Status -->
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Orders by Status</h6>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.OrdersByStatus != null)
+                {
+                    var ordersByStatus = ViewBag.OrdersByStatus as Dictionary<string, int>;
+                    <table class="table table-sm">
+                        <tbody>
+                            @foreach (var status in ordersByStatus)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge 
+                                            @(status.Key == "Pending" ? "bg-warning" : 
+                                              status.Key == "Processing" ? "bg-info" : 
+                                              status.Key == "Shipped" ? "bg-primary" : 
+                                              status.Key == "Delivered" ? "bg-success" : "bg-danger")">
+                                            @status.Key
+                                        </span>
+                                    </td>
+                                    <td class="text-end"><strong>@status.Value</strong></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function toggleCustomDates(period) {
+            const startDateGroup = document.getElementById('startDateGroup');
+            const endDateGroup = document.getElementById('endDateGroup');
+            
+            if (period === 'custom') {
+                startDateGroup.style.display = 'block';
+                endDateGroup.style.display = 'block';
+            } else {
+                startDateGroup.style.display = 'none';
+                endDateGroup.style.display = 'none';
+            }
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .border-left-primary {
+            border-left: 4px solid #4e73df !important;
+        }
+        .border-left-success {
+            border-left: 4px solid #1cc88a !important;
+        }
+        .border-left-info {
+            border-left: 4px solid #36b9cc !important;
+        }
+        .border-left-warning {
+            border-left: 4px solid #f6c23e !important;
+        }
+        .text-gray-800 {
+            color: #5a5c69 !important;
+        }
+        .text-gray-300 {
+            color: #dddfeb !important;
+        }
+    </style>
+}

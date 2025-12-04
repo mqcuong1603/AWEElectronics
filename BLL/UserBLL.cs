@@ -27,6 +27,9 @@ namespace AWEElectronics.BLL
                 };
             }
 
+            // Trim whitespace from username
+            username = username.Trim();
+
             User user = _userDAL.GetByUsername(username);
 
             if (user == null)
@@ -34,7 +37,7 @@ namespace AWEElectronics.BLL
                 return new LoginResult
                 {
                     Success = false,
-                    Message = "Invalid username or password."
+                    Message = "Invalid username or password. Please check your credentials and try again."
                 };
             }
 
@@ -57,7 +60,7 @@ namespace AWEElectronics.BLL
                 return new LoginResult
                 {
                     Success = false,
-                    Message = "Invalid username or password."
+                    Message = "Invalid username or password. Please check your credentials and try again."
                 };
             }
 
