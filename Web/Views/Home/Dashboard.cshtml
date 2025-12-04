@@ -1,0 +1,188 @@
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="dashboard-header">
+    <h2>Dashboard</h2>
+    <p class="text-muted">Welcome back, @ViewBag.CurrentUser (@ViewBag.UserRole)</p>
+</div>
+
+<hr />
+
+<!-- Key Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Total Revenue (YTD)</h6>
+                        <h3 class="card-title mb-0">$@ViewBag.TotalRevenue.ToString("N2")</h3>
+                    </div>
+                    <i class="fas fa-dollar-sign fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Total Orders (YTD)</h6>
+                        <h3 class="card-title mb-0">@ViewBag.TotalOrders</h3>
+                    </div>
+                    <i class="fas fa-shopping-cart fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Total Products</h6>
+                        <h3 class="card-title mb-0">@ViewBag.TotalProducts</h3>
+                    </div>
+                    <i class="fas fa-box fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Low Stock Alert</h6>
+                        <h3 class="card-title mb-0">@ViewBag.LowStockCount</h3>
+                    </div>
+                    <i class="fas fa-exclamation-triangle fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Today's Summary -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="fas fa-calendar-day"></i> Today's Sales</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p class="text-muted mb-1">Revenue</p>
+                        <h4 class="text-primary">$@ViewBag.TodayRevenue.ToString("N2")</h4>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-muted mb-1">Orders</p>
+                        <h4 class="text-success">@ViewBag.TodayOrders</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="fas fa-tasks"></i> Order Status Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-3">
+                        <p class="text-muted mb-1">Pending</p>
+                        <h5 class="text-warning">@ViewBag.PendingOrders</h5>
+                    </div>
+                    <div class="col-3">
+                        <p class="text-muted mb-1">Processing</p>
+                        <h5 class="text-info">@ViewBag.ProcessingOrders</h5>
+                    </div>
+                    <div class="col-3">
+                        <p class="text-muted mb-1">Shipped</p>
+                        <h5 class="text-primary">@ViewBag.ShippedOrders</h5>
+                    </div>
+                    <div class="col-3">
+                        <p class="text-muted mb-1">Delivered</p>
+                        <h5 class="text-success">@ViewBag.DeliveredOrders</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="@Url.Action("Index", "Products")" class="btn btn-outline-primary btn-block btn-lg mb-2">
+                            <i class="fas fa-box"></i> View Products
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="@Url.Action("Index", "Orders")" class="btn btn-outline-success btn-block btn-lg mb-2">
+                            <i class="fas fa-shopping-cart"></i> View Orders
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="@Url.Action("Index", "Orders", new { status = "Pending" })" class="btn btn-outline-warning btn-block btn-lg mb-2">
+                            <i class="fas fa-clock"></i> Pending Orders
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="@Url.Action("Index", "Reports")" class="btn btn-outline-info btn-block btn-lg mb-2">
+                            <i class="fas fa-chart-line"></i> Sales Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-header {
+        margin-bottom: 20px;
+    }
+    .stat-card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .stat-card .card-subtitle {
+        font-size: 12px;
+        opacity: 0.9;
+    }
+    .stat-card .card-title {
+        font-weight: bold;
+    }
+    .opacity-50 {
+        opacity: 0.3;
+    }
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+</style>
+
+@section scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+}

@@ -1,0 +1,430 @@
+@{
+    ViewBag.Title = "Sales Reports";
+    var dailySales = ViewBag.DailySales as System.Collections.Generic.List<AWEElectronics.DTO.SalesReport>;
+    var topProducts = ViewBag.TopProducts as System.Collections.Generic.List<AWEElectronics.DTO.ProductSalesReport>;
+    var lowStockProducts = ViewBag.LowStockProducts as System.Collections.Generic.List<AWEElectronics.DTO.Product>;
+    var ordersByStatus = ViewBag.OrdersByStatus as System.Collections.Generic.Dictionary<string, int>;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h2><i class="fas fa-chart-line"></i> Sales Reports</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">@Html.ActionLink("Home", "Dashboard", "Home")</li>
+                        <li class="breadcrumb-item active">Reports</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Period Filter -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="btn-group" role="group">
+                        <a href="@Url.Action("Index", "Reports", new { period = "today" })" 
+                           class="btn @(ViewBag.CurrentPeriod == "today" ? "btn-primary" : "btn-outline-primary")">
+                            <i class="fas fa-calendar-day"></i> Today
+                        </a>
+                        <a href="@Url.Action("Index", "Reports", new { period = "week" })" 
+                           class="btn @(ViewBag.CurrentPeriod == "week" ? "btn-primary" : "btn-outline-primary")">
+                            <i class="fas fa-calendar-week"></i> This Week
+                        </a>
+                        <a href="@Url.Action("Index", "Reports", new { period = "month" })" 
+                           class="btn @(ViewBag.CurrentPeriod == "month" ? "btn-primary" : "btn-outline-primary")">
+                            <i class="fas fa-calendar-alt"></i> This Month
+                        </a>
+                        <a href="@Url.Action("Index", "Reports", new { period = "year" })" 
+                           class="btn @(ViewBag.CurrentPeriod == "year" ? "btn-primary" : "btn-outline-primary")">
+                            <i class="fas fa-calendar"></i> This Year
+                        </a>
+                        <a href="@Url.Action("Custom", "Reports")" class="btn btn-outline-secondary">
+                            <i class="fas fa-filter"></i> Custom Range
+                        </a>
+                    </div>
+                    <div class="mt-2 text-muted">
+                        <small>
+                            <i class="fas fa-info-circle"></i> 
+                            Showing data from @ViewBag.StartDate.ToString("MMM dd, yyyy") to @ViewBag.EndDate.ToString("MMM dd, yyyy")
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Year-to-Date Summary Cards -->
+            <h4 class="mb-3"><i class="fas fa-calendar-check"></i> Year-to-Date Summary</h4>
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card stat-card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Total Revenue (YTD)</h6>
+                                    <h3 class="card-title mb-0">$@ViewBag.YTDRevenue.ToString("N2")</h3>
+                                </div>
+                                <i class="fas fa-dollar-sign fa-3x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Total Orders (YTD)</h6>
+                                    <h3 class="card-title mb-0">@ViewBag.YTDOrders</h3>
+                                </div>
+                                <i class="fas fa-shopping-cart fa-3x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Total Products</h6>
+                                    <h3 class="card-title mb-0">@ViewBag.TotalProducts</h3>
+                                </div>
+                                <i class="fas fa-box fa-3x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Period Summary Cards -->
+            <h4 class="mb-3"><i class="fas fa-chart-bar"></i> Period Summary</h4>
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card stat-card bg-gradient-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Period Revenue</h6>
+                                    <h3 class="card-title mb-0">$@ViewBag.PeriodRevenue.ToString("N2")</h3>
+                                </div>
+                                <i class="fas fa-money-bill-wave fa-3x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card bg-gradient-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Period Orders</h6>
+                                    <h3 class="card-title mb-0">@ViewBag.PeriodOrders</h3>
+                                </div>
+                                <i class="fas fa-file-invoice fa-3x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card bg-gradient-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Items Sold</h6>
+                                    <h3 class="card-title mb-0">@ViewBag.PeriodItems</h3>
+                                </div>
+                                <i class="fas fa-boxes fa-3x opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Daily Sales Report -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-calendar-day"></i> Daily Sales Report</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (dailySales != null && dailySales.Count > 0)
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Date</th>
+                                                <th class="text-center">Orders</th>
+                                                <th class="text-right">Revenue</th>
+                                                <th class="text-center">Items</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var sale in dailySales.OrderByDescending(x => x.Date))
+                                            {
+                                                <tr>
+                                                    <td>@sale.Date.ToString("MMM dd, yyyy")</td>
+                                                    <td class="text-center"><span class="badge badge-info">@sale.TotalOrders</span></td>
+                                                    <td class="text-right"><strong>$@sale.TotalRevenue.ToString("N2")</strong></td>
+                                                    <td class="text-center">@sale.TotalItemsSold</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot class="bg-light">
+                                            <tr>
+                                                <td><strong>Total</strong></td>
+                                                <td class="text-center"><strong>@ViewBag.PeriodOrders</strong></td>
+                                                <td class="text-right"><strong class="text-success">$@ViewBag.PeriodRevenue.ToString("N2")</strong></td>
+                                                <td class="text-center"><strong>@ViewBag.PeriodItems</strong></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning text-center">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <p class="mb-0">No sales data available for this period.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Selling Products -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-trophy"></i> Top Selling Products</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (topProducts != null && topProducts.Count > 0)
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>SKU</th>
+                                                <th>Product</th>
+                                                <th class="text-center">Qty Sold</th>
+                                                <th class="text-right">Revenue</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{ int rank = 1; }
+                                            @foreach (var product in topProducts)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @if (rank == 1)
+                                                        {
+                                                            <span class="badge badge-warning"><i class="fas fa-medal"></i></span>
+                                                        }
+                                                        else if (rank == 2)
+                                                        {
+                                                            <span class="badge badge-secondary"><i class="fas fa-medal"></i></span>
+                                                        }
+                                                        else if (rank == 3)
+                                                        {
+                                                            <span class="badge badge-danger"><i class="fas fa-medal"></i></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@rank</span>
+                                                        }
+                                                    </td>
+                                                    <td><code>@product.SKU</code></td>
+                                                    <td>@product.ProductName</td>
+                                                    <td class="text-center"><span class="badge badge-primary">@product.QuantitySold</span></td>
+                                                    <td class="text-right"><strong>$@product.TotalRevenue.ToString("N2")</strong></td>
+                                                </tr>
+                                                rank++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning text-center">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <p class="mb-0">No product sales data available for this period.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Orders by Status -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-tasks"></i> Orders by Status</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (ordersByStatus != null && ordersByStatus.Count > 0)
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Status</th>
+                                                <th class="text-center">Count</th>
+                                                <th class="text-right">Percentage</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                int totalOrders = ordersByStatus.Values.Sum();
+                                            }
+                                            @foreach (var status in ordersByStatus)
+                                            {
+                                                var percentage = totalOrders > 0 ? (status.Value * 100.0 / totalOrders) : 0;
+                                                <tr>
+                                                    <td>
+                                                        @switch (status.Key)
+                                                        {
+                                                            case "Pending":
+                                                                <span class="badge badge-warning">Pending</span>
+                                                                break;
+                                                            case "Processing":
+                                                                <span class="badge badge-info">Processing</span>
+                                                                break;
+                                                            case "Shipped":
+                                                                <span class="badge badge-primary">Shipped</span>
+                                                                break;
+                                                            case "Delivered":
+                                                                <span class="badge badge-success">Delivered</span>
+                                                                break;
+                                                            case "Cancelled":
+                                                                <span class="badge badge-danger">Cancelled</span>
+                                                                break;
+                                                        }
+                                                    </td>
+                                                    <td class="text-center"><strong>@status.Value</strong></td>
+                                                    <td class="text-right">@percentage.ToString("N1")%</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot class="bg-light">
+                                            <tr>
+                                                <td><strong>Total</strong></td>
+                                                <td class="text-center"><strong>@totalOrders</strong></td>
+                                                <td class="text-right"><strong>100.0%</strong></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning text-center">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <p class="mb-0">No order status data available.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Low Stock Products -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Low Stock Products</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (lowStockProducts != null && lowStockProducts.Count > 0)
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>SKU</th>
+                                                <th>Product Name</th>
+                                                <th class="text-center">Stock</th>
+                                                <th class="text-right">Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var product in lowStockProducts)
+                                            {
+                                                <tr>
+                                                    <td><code>@product.SKU</code></td>
+                                                    <td>@product.Name</td>
+                                                    <td class="text-center">
+                                                        <span class="badge @(product.Stock <= 5 ? "badge-danger" : "badge-warning")">
+                                                            @product.Stock
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-right">$@product.Price.ToString("N2")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-success text-center">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p class="mb-0">All products have sufficient stock.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        margin-bottom: 20px;
+    }
+    .stat-card {
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    .card {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .opacity-50 {
+        opacity: 0.5;
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+    }
+    .bg-gradient-success {
+        background: linear-gradient(45deg, #28a745, #1e7e34);
+    }
+    .bg-gradient-info {
+        background: linear-gradient(45deg, #17a2b8, #117a8b);
+    }
+    .table-sm th, .table-sm td {
+        padding: 0.5rem;
+    }
+    code {
+        color: #d63384;
+        background-color: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+    .badge {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+</style>
+
+@section scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+}
