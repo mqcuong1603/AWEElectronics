@@ -113,7 +113,18 @@ namespace AWEElectronics.Desktop
                 {
                     try
                     {
-                        orderBLL.UpdateOrderStatus(orderId, statusForm.SelectedStatus);
+                        var updateResult = orderBLL.UpdateOrderStatus(orderId, statusForm.SelectedStatus);
+                        if (updateResult.Success)
+                        {
+                            MessageBox.Show("Order status updated successfully!", "Success",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadOrders();
+                        }
+                        else
+                        {
+                            MessageBox.Show(updateResult.Message, "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                         MessageBox.Show("Order status updated successfully!", "Success",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LoadOrders();
@@ -181,6 +192,11 @@ namespace AWEElectronics.Desktop
             {
                 btnViewDetails_Click(sender, e);
             }
+        }
+
+        private void dgvOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

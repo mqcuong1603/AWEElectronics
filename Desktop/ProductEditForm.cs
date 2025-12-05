@@ -107,19 +107,36 @@ namespace AWEElectronics.Desktop
                 if (isEditMode)
                 {
                     product.ProductID = currentProduct.ProductID;
-                    productBLL.Update(product);
-                    MessageBox.Show("Product updated successfully!", "Success",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var result = productBLL.UpdateProduct(product);  // CHANGED: Call UpdateProduct
+                    if (result.Success)
+                    {
+                        MessageBox.Show("Product updated successfully!", "Success",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show(result.Message, "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
-                    productBLL.Create(product);
-                    MessageBox.Show("Product created successfully!", "Success",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var result = productBLL.CreateProduct(product);  // CHANGED: Call CreateProduct
+                    if (result.Success)
+                    {
+                        MessageBox.Show("Product created successfully!", "Success",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show(result.Message, "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-
-                this.DialogResult = DialogResult.OK;
-                this.Close();
             }
             catch (Exception ex)
             {

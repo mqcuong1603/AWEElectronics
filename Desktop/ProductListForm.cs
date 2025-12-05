@@ -126,10 +126,18 @@ namespace AWEElectronics.Desktop
                 try
                 {
                     int productId = Convert.ToInt32(dgvProducts.CurrentRow.Cells["ProductID"].Value);
-                    productBLL.Delete(productId);
-                    MessageBox.Show("Product deleted successfully!", "Success",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadProducts();
+                    var deleteResult = productBLL.DeleteProduct(productId);  // CHANGED
+                    if (deleteResult.Success)
+                    {
+                        MessageBox.Show("Product deleted successfully!", "Success",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadProducts();
+                    }
+                    else
+                    {
+                        MessageBox.Show(deleteResult.Message, "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -138,6 +146,8 @@ namespace AWEElectronics.Desktop
                 }
             }
         }
+                     
+        
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {

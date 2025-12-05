@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using AWEElectronics.BLL;
 using AWEElectronics.DTO;
 
-
 namespace AWEElectronics.Desktop
 {
     public partial class LoginForm : Form
@@ -28,18 +27,18 @@ namespace AWEElectronics.Desktop
             try
             {
                 UserBLL userBLL = new UserBLL();
-                User user = userBLL.Login(username, password);
+                LoginResult result = userBLL.Login(username, password);
 
-                if (user != null)
+                if (result.Success && result.User != null)
                 {
                     this.Hide();
-                    MainForm mainForm = new MainForm(user);
+                    MainForm mainForm = new MainForm(result.User);
                     mainForm.ShowDialog();
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Invalid username or password!", "Login Failed",
+                    MessageBox.Show(result.Message ?? "Invalid username or password!", "Login Failed",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtPassword.Clear();
                     txtUsername.Focus();

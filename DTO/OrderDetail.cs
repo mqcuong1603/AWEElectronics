@@ -12,7 +12,9 @@ namespace AWEElectronics.DTO
         // Navigation properties
         public string ProductName { get; set; }
         public string ProductSKU { get; set; }
-        
+        // Add this navigation property object
+        public Product Product { get; set; }
+
         // Alias for view compatibility
         public string SKU => ProductSKU;
     }

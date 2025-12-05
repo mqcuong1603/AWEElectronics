@@ -25,7 +25,9 @@ namespace AWEElectronics.DTO
         public string CustomerPhone { get; set; }
         public string StaffName { get; set; }
         public string ShippingAddress { get; set; }
-
+        // Add these navigation property objects
+        public Customer Customer { get; set; }
+        public User StaffChecked { get; set; }
         // Order details
         public List<OrderDetail> OrderDetails { get; set; }
     }

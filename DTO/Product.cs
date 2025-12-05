@@ -25,5 +25,9 @@ namespace AWEElectronics.DTO
         // Navigation properties for display
         public string CategoryName { get; set; }
         public string SupplierName { get; set; }
+  
+        // Add these navigation property objects
+        public Category Category { get; set; }
+        public Supplier Supplier { get; set; }
     }
 }
