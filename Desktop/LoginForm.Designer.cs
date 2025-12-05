@@ -34,6 +34,16 @@
             this.panelTop.SuspendLayout();
             this.SuspendLayout();
             // 
+            // panelTop
+            // 
+            this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(128)))), ((int)(((byte)(185)))));
+            this.panelTop.Controls.Add(this.lblTitle);
+            this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTop.Location = new System.Drawing.Point(0, 0);
+            this.panelTop.Name = "panelTop";
+            this.panelTop.Size = new System.Drawing.Size(450, 80);
+            this.panelTop.TabIndex = 0;
+            // 
             // lblTitle
             // 
             this.lblTitle.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -45,7 +55,6 @@
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "AWE Electronics";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
             // 
             // lblUsername
             // 
@@ -53,7 +62,7 @@
             this.lblUsername.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblUsername.Location = new System.Drawing.Point(70, 110);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(74, 19);
+            this.lblUsername.Size = new System.Drawing.Size(75, 19);
             this.lblUsername.TabIndex = 1;
             this.lblUsername.Text = "Username:";
             // 
@@ -113,16 +122,6 @@
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // panelTop
-            // 
-            this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(128)))), ((int)(((byte)(185)))));
-            this.panelTop.Controls.Add(this.lblTitle);
-            this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelTop.Location = new System.Drawing.Point(0, 0);
-            this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(450, 80);
-            this.panelTop.TabIndex = 0;
-            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -144,7 +143,6 @@
             this.panelTop.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
     }
 }

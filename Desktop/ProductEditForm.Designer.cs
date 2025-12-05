@@ -77,7 +77,7 @@
             this.lblCategory.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblCategory.Location = new System.Drawing.Point(30, 110);
             this.lblCategory.Name = "lblCategory";
-            this.lblCategory.Size = new System.Drawing.Size(68, 19);
+            this.lblCategory.Size = new System.Drawing.Size(69, 19);
             this.lblCategory.TabIndex = 2;
             this.lblCategory.Text = "Category:";
             // 
@@ -87,7 +87,7 @@
             this.lblSupplier.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblSupplier.Location = new System.Drawing.Point(30, 150);
             this.lblSupplier.Name = "lblSupplier";
-            this.lblSupplier.Size = new System.Drawing.Size(61, 19);
+            this.lblSupplier.Size = new System.Drawing.Size(63, 19);
             this.lblSupplier.TabIndex = 3;
             this.lblSupplier.Text = "Supplier:";
             // 
@@ -107,7 +107,7 @@
             this.lblStock.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblStock.Location = new System.Drawing.Point(30, 230);
             this.lblStock.Name = "lblStock";
-            this.lblStock.Size = new System.Drawing.Size(80, 19);
+            this.lblStock.Size = new System.Drawing.Size(82, 19);
             this.lblStock.TabIndex = 5;
             this.lblStock.Text = "Stock Level:";
             // 
@@ -117,7 +117,7 @@
             this.lblSpecifications.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblSpecifications.Location = new System.Drawing.Point(30, 270);
             this.lblSpecifications.Name = "lblSpecifications";
-            this.lblSpecifications.Size = new System.Drawing.Size(93, 19);
+            this.lblSpecifications.Size = new System.Drawing.Size(98, 19);
             this.lblSpecifications.TabIndex = 6;
             this.lblSpecifications.Text = "Specifications:";
             // 
@@ -190,7 +190,7 @@
             this.chkPublished.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.chkPublished.Location = new System.Drawing.Point(160, 365);
             this.chkPublished.Name = "chkPublished";
-            this.chkPublished.Size = new System.Drawing.Size(87, 23);
+            this.chkPublished.Size = new System.Drawing.Size(84, 23);
             this.chkPublished.TabIndex = 14;
             this.chkPublished.Text = "Published";
             this.chkPublished.UseVisualStyleBackColor = true;
@@ -250,10 +250,8 @@
             this.Name = "ProductEditForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Product Edit";
-            this.Load += new System.EventHandler(this.ProductEditForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
     }
 }

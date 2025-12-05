@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using AWEElectronics.BLL;
 using AWEElectronics.DTO;
 
+
 namespace AWEElectronics.Desktop
 {
     public partial class LoginForm : Form
@@ -27,12 +28,12 @@ namespace AWEElectronics.Desktop
             try
             {
                 UserBLL userBLL = new UserBLL();
-                LoginResult result = userBLL.Login(username, password); // FIXED: Changed from User to LoginResult
+                User user = userBLL.Login(username, password);
 
-                if (result.Success && result.User != null) // FIXED: Check Success and User properties
+                if (user != null)
                 {
                     this.Hide();
-                    MainForm mainForm = new MainForm(result.User); // FIXED: Pass result.User
+                    MainForm mainForm = new MainForm(user);
                     mainForm.ShowDialog();
                     this.Close();
                 }
