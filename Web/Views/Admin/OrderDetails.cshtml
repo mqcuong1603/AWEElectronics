@@ -1,0 +1,265 @@
+@model AWEElectronics.DTO.Order
+@{
+    ViewBag.Title = "Order Details";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2>Order Details</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="@Url.Action("Orders", "Admin")" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Orders
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Order Information -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-shopping-cart"></i> Order Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Order Code:</strong> <code>@Model.OrderCode</code></p>
+                            <p><strong>Order Date:</strong> @Model.OrderDate.ToString("yyyy-MM-dd HH:mm")</p>
+                            <p><strong>Customer:</strong> @Model.CustomerName</p>
+                            <p><strong>Email:</strong> @Model.CustomerEmail</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> 
+                                @switch (Model.Status)
+                                {
+                                    case "Pending":
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        break;
+                                    case "Processing":
+                                        <span class="badge bg-info">Processing</span>
+                                        break;
+                                    case "Shipped":
+                                        <span class="badge bg-primary">Shipped</span>
+                                        break;
+                                    case "Delivered":
+                                        <span class="badge bg-success">Delivered</span>
+                                        break;
+                                    case "Cancelled":
+                                        <span class="badge bg-danger">Cancelled</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">@Model.Status</span>
+                                        break;
+                                }
+                            </p>
+                            <p><strong>Staff Checked:</strong> @(Model.StaffName ?? "Not assigned")</p>
+                            <p><strong>Shipping Address:</strong><br />@Model.ShippingAddress</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Order Items</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                                {
+                                    foreach (var item in Model.OrderDetails)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <strong>@item.ProductName</strong><br />
+                                                <small class="text-muted">SKU: @item.ProductSKU</small>
+                                            </td>
+                                            <td class="text-center">@item.Quantity</td>
+                                            <td class="text-end">$@item.UnitPrice.ToString("N2")</td>
+                                            <td class="text-end"><strong>$@((item.Quantity * item.UnitPrice).ToString("N2"))</strong></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                    <td class="text-end">$@Model.SubTotal.ToString("N2")</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Tax (10%):</strong></td>
+                                    <td class="text-end">$@Model.Tax.ToString("N2")</td>
+                                </tr>
+                                <tr class="table-primary">
+                                    <td colspan="3" class="text-end"><strong>Grand Total:</strong></td>
+                                    <td class="text-end"><strong>$@Model.GrandTotal.ToString("N2")</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Panel -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-cog"></i> Actions</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Status != "Cancelled" && Model.Status != "Delivered")
+                    {
+                        <h6 class="mb-3">Update Order Status</h6>
+                        using (Html.BeginForm("UpdateOrderStatus", "Admin", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("orderId", Model.OrderID)
+
+                            <div class="mb-3">
+                                <select name="newStatus" class="form-select" required>
+                                    <option value="">-- Select Status --</option>
+                                    @if (Model.Status == "Pending")
+                                    {
+                                        <option value="Processing">Processing</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    }
+                                    else if (Model.Status == "Processing")
+                                    {
+                                        <option value="Shipped">Shipped</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    }
+                                    else if (Model.Status == "Shipped")
+                                    {
+                                        <option value="Delivered">Delivered</option>
+                                    }
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-sync"></i> Update Status
+                            </button>
+                        }
+
+                        <hr />
+                    }
+
+                    @if (Model.Status == "Pending" || Model.Status == "Processing")
+                    {
+                        <h6 class="mb-3 text-danger">Cancel Order</h6>
+                        using (Html.BeginForm("CancelOrder", "Admin", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("orderId", Model.OrderID)
+                            <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Are you sure you want to cancel this order? Stock will be restored.')">
+                                <i class="fas fa-times"></i> Cancel Order
+                            </button>
+                        }
+                    }
+                    else if (Model.Status == "Cancelled")
+                    {
+                        <div class="alert alert-danger mb-0">
+                            <i class="fas fa-exclamation-circle"></i> This order has been cancelled.
+                        </div>
+                    }
+                    else if (Model.Status == "Delivered")
+                    {
+                        <div class="alert alert-success mb-0">
+                            <i class="fas fa-check-circle"></i> This order has been delivered.
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Order Timeline -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Status Timeline</h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item @(Model.Status == "Pending" || Model.Status == "Processing" || Model.Status == "Shipped" || Model.Status == "Delivered" ? "active" : "")">
+                            <i class="fas fa-circle"></i> Pending
+                        </div>
+                        <div class="timeline-item @(Model.Status == "Processing" || Model.Status == "Shipped" || Model.Status == "Delivered" ? "active" : "")">
+                            <i class="fas fa-circle"></i> Processing
+                        </div>
+                        <div class="timeline-item @(Model.Status == "Shipped" || Model.Status == "Delivered" ? "active" : "")">
+                            <i class="fas fa-circle"></i> Shipped
+                        </div>
+                        <div class="timeline-item @(Model.Status == "Delivered" ? "active" : "")">
+                            <i class="fas fa-circle"></i> Delivered
+                        </div>
+                        @if (Model.Status == "Cancelled")
+                        {
+                            <div class="timeline-item cancelled">
+                                <i class="fas fa-times-circle"></i> Cancelled
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .timeline {
+            position: relative;
+            padding: 0;
+        }
+        .timeline-item {
+            padding: 10px 0;
+            color: #999;
+        }
+        .timeline-item.active {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .timeline-item.cancelled {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .timeline-item i {
+            margin-right: 8px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+}

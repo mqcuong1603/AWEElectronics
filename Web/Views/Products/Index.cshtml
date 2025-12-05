@@ -1,0 +1,80 @@
+@model Web.Models.ProductListViewModel
+@{
+    ViewBag.Title = "Products";
+}
+
+<h2 class="mb-4">Our Products</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <h5>Categories</h5>
+        <div class="list-group mb-4">
+            @Html.ActionLink("All Products", "Index", "Products", null, new { @class = "list-group-item list-group-item-action" + (Model.SelectedCategoryId == null ? " active" : "") })
+            @foreach (var category in Model.Categories.Where(c => c.ParentCategoryID == null))
+            {
+                @Html.ActionLink(category.Name, "Index", "Products", new { categoryId = category.CategoryID }, 
+                    new { @class = "list-group-item list-group-item-action" + (Model.SelectedCategoryId == category.CategoryID ? " active" : "") })
+            }
+        </div>
+
+        <h5>Sort By</h5>
+        <div class="list-group">
+            @Html.ActionLink("Default", "Index", "Products", new { categoryId = Model.SelectedCategoryId, search = Model.SearchKeyword }, 
+                new { @class = "list-group-item list-group-item-action" + (string.IsNullOrEmpty(Model.SortBy) ? " active" : "") })
+            @Html.ActionLink("Price: Low to High", "Index", "Products", new { categoryId = Model.SelectedCategoryId, search = Model.SearchKeyword, sortBy = "price_asc" }, 
+                new { @class = "list-group-item list-group-item-action" + (Model.SortBy == "price_asc" ? " active" : "") })
+            @Html.ActionLink("Price: High to Low", "Index", "Products", new { categoryId = Model.SelectedCategoryId, search = Model.SearchKeyword, sortBy = "price_desc" }, 
+                new { @class = "list-group-item list-group-item-action" + (Model.SortBy == "price_desc" ? " active" : "") })
+            @Html.ActionLink("Name", "Index", "Products", new { categoryId = Model.SelectedCategoryId, search = Model.SearchKeyword, sortBy = "name" }, 
+                new { @class = "list-group-item list-group-item-action" + (Model.SortBy == "name" ? " active" : "") })
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="mb-3">
+            @using (Html.BeginForm("Index", "Products", FormMethod.Get, new { @class = "input-group" }))
+            {
+                <input type="text" name="search" class="form-control" placeholder="Search products..." value="@Model.SearchKeyword" />
+                <button class="btn btn-primary" type="submit">Search</button>
+            }
+        </div>
+
+        @if (!Model.Products.Any())
+        {
+            <div class="alert alert-info">
+                <h4>No products found</h4>
+                <p>Try adjusting your search or filters.</p>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted mb-3">Showing @Model.Products.Count product(s)</p>
+            <div class="row">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card product-card">
+                            <div class="card-body">
+                                <h5 class="card-title">@product.Name</h5>
+                                <p class="card-text text-muted">@product.CategoryName</p>
+                                <p class="card-text"><small>SKU: @product.SKU</small></p>
+                                <p class="price">$@product.Price.ToString("N2")</p>
+                                @if (product.StockLevel > 0)
+                                {
+                                    <span class="badge bg-success">In Stock (@product.StockLevel)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Out of Stock</span>
+                                }
+                                <div class="mt-3">
+                                    @Html.ActionLink("View Details", "Details", "Products", new { id = product.ProductID }, new { @class = "btn btn-primary btn-sm" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

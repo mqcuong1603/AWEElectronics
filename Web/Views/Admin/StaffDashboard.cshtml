@@ -1,0 +1,231 @@
+@{
+    ViewBag.Title = "Staff Dashboard";
+}
+
+<style>
+    .staff-theme .card.bg-primary { background-color: #28a745 !important; }
+    .staff-theme .card.bg-success { background-color: #20c997 !important; }
+    .staff-theme .card.bg-warning { background-color: #ffc107 !important; }
+    .staff-theme .card.bg-info { background-color: #17a2b8 !important; }
+    .staff-theme .card-header.bg-dark { background-color: #155724 !important; }
+    .staff-theme .btn-outline-primary { border-color: #28a745; color: #28a745; }
+    .staff-theme .btn-outline-primary:hover { background-color: #28a745; color: white; }
+    .staff-theme .btn-outline-success { border-color: #20c997; color: #20c997; }
+    .staff-theme .btn-outline-success:hover { background-color: #20c997; color: white; }
+</style>
+
+<div class="container-fluid staff-theme">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="fas fa-user-tie"></i> Staff Dashboard
+            </h2>
+            <p class="lead">Welcome back, <strong>@ViewBag.UserName</strong>! <span class="badge bg-success">Staff Member</span></p>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Products</h6>
+                            <h2 class="card-title mb-0">@ViewBag.TotalProducts</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-box fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small>@ViewBag.LowStockProducts items need restocking</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Pending Orders</h6>
+                            <h2 class="card-title mb-0">@ViewBag.PendingOrders</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-clock fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small>Awaiting processing</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Processing</h6>
+                            <h2 class="card-title mb-0">@ViewBag.ProcessingOrders</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-spinner fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small>Orders in progress</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Orders</h6>
+                            <h2 class="card-title mb-0">@ViewBag.TotalOrders</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-shopping-cart fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small>All orders</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts Section -->
+    @if (ViewBag.LowStockProducts > 0 || ViewBag.PendingOrders > 0)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Tasks Requiring Attention</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @if (ViewBag.LowStockProducts > 0)
+                            {
+                                <div class="col-md-6">
+                                    <div class="alert alert-warning mb-0">
+                                        <i class="fas fa-box"></i> <strong>@ViewBag.LowStockProducts</strong> product(s) have low stock levels (?10 units).
+                                        <a href="@Url.Action("Products", "Admin")" class="alert-link">Restock Now</a>
+                                    </div>
+                                </div>
+                            }
+                            @if (ViewBag.PendingOrders > 0)
+                            {
+                                <div class="col-md-6">
+                                    <div class="alert alert-success mb-0">
+                                        <i class="fas fa-shopping-cart"></i> <strong>@ViewBag.PendingOrders</strong> order(s) need to be processed.
+                                        <a href="@Url.Action("Orders", "Admin")" class="alert-link">Process Orders</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Quick Actions -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Products", "Admin")" class="btn btn-outline-primary btn-lg w-100">
+                                <i class="fas fa-box fa-2x mb-2"></i><br />
+                                Manage Products
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Orders", "Admin")" class="btn btn-outline-success btn-lg w-100">
+                                <i class="fas fa-shopping-cart fa-2x mb-2"></i><br />
+                                Process Orders
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="@Url.Action("CreateProduct", "Admin")" class="btn btn-outline-primary btn-lg w-100">
+                                <i class="fas fa-plus-circle fa-2x mb-2"></i><br />
+                                Add New Product
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Info -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Staff Responsibilities</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-check-circle text-success"></i> You Can:</h6>
+                            <ul>
+                                <li>Manage products (Create, Edit, View)</li>
+                                <li>Process customer orders</li>
+                                <li>Update order status</li>
+                                <li>Check inventory levels</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-times-circle text-danger"></i> Restricted:</h6>
+                            <ul>
+                                <li>Cannot manage user accounts</li>
+                                <li>Cannot delete products</li>
+                                <li>Cannot access financial reports</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert-dismissible').fadeOut('slow');
+        }, 5000);
+    </script>
+}

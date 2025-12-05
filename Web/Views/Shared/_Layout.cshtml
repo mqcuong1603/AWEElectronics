@@ -3,37 +3,227 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - AWE Electronics</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            padding-top: 70px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .product-card {
+            transition: transform 0.2s;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .product-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+        /* Ensure dropdown works */
+        .dropdown-menu {
+            z-index: 1050;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            @Html.ActionLink("AWE Electronics", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Products", "Index", "Products", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    @if (Session["Username"] != null)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle"></i> @Session["FullName"]
+                                @if (Session["Role"]?.ToString() == "Admin")
+                                {
+                                    <span class="badge bg-primary ms-1">Admin</span>
+                                }
+                                else if (Session["Role"]?.ToString() == "Staff")
+                                {
+                                    <span class="badge bg-success ms-1">Staff</span>
+                                }
+                                else if (Session["Role"]?.ToString() == "Accountant")
+                                {
+                                    <span class="badge bg-warning text-dark ms-1">Accountant</span>
+                                }
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="@Url.Action("Profile", "Account")">
+                                    <i class="bi bi-person"></i> Profile
+                                </a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("MyOrders", "Orders")">
+                                    <i class="bi bi-bag"></i> My Orders
+                                </a></li>
+                                @if (Session["Role"]?.ToString() == "Admin")
+                                {
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Index", "Admin")">
+                                        <i class="bi bi-speedometer2"></i> Admin Dashboard
+                                        <span class="badge bg-primary ms-2">Admin</span>
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Users", "Admin")">
+                                        <i class="bi bi-people"></i> Manage Users
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Products", "Admin")">
+                                        <i class="bi bi-box-seam"></i> Manage Products
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Admin")">
+                                        <i class="bi bi-cart"></i> Manage Orders
+                                    </a></li>
+                                }
+                                else if (Session["Role"]?.ToString() == "Staff")
+                                {
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Index", "Admin")">
+                                        <i class="bi bi-speedometer2"></i> Staff Dashboard
+                                        <span class="badge bg-success ms-2">Staff</span>
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Products", "Admin")">
+                                        <i class="bi bi-box-seam"></i> Manage Products
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Admin")">
+                                        <i class="bi bi-cart"></i> Process Orders
+                                    </a></li>
+                                }
+                                else if (Session["Role"]?.ToString() == "Accountant")
+                                {
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Index", "Admin")">
+                                        <i class="bi bi-speedometer2"></i> Accountant Dashboard
+                                        <span class="badge bg-warning text-dark ms-2">Accountant</span>
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Admin")">
+                                        <i class="bi bi-file-earmark-text"></i> View Orders
+                                    </a></li>
+                                }
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Login", "Login", "Account", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Register", "Register", "Account", new { area = "" }, new { @class = "nav-link" })
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
     </nav>
+
     <div class="container body-content">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    <footer class="text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>AWE Electronics</h5>
+                    <p>Your trusted electronics store in Australia</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li>@Html.ActionLink("Products", "Index", "Products")</li>
+                        <li>@Html.ActionLink("About Us", "About", "Home")</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact</h5>
+                    <p>Email: info@aweelectronics.com.au<br />Phone: +61 2 1234 5678</p>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.1);" />
+            <p>&copy; @DateTime.Now.Year - AWE Electronics. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- jQuery (required for Bootstrap dropdowns) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+            
+            // Ensure dropdowns work
+            var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
+        });
+    </script>
+    
     @RenderSection("scripts", required: false)
 </body>
 </html>

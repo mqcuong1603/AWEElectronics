@@ -1,0 +1,95 @@
+@model AWEElectronics.DTO.Product
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">@Html.ActionLink("Home", "Index", "Home")</li>
+        <li class="breadcrumb-item">@Html.ActionLink("Products", "Index", "Products")</li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h1 class="display-1">??</h1>
+                <p class="text-muted">Product Image</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <h1>@Model.Name</h1>
+        <p class="text-muted">SKU: @Model.SKU</p>
+        
+        @if (!string.IsNullOrEmpty(Model.CategoryName))
+        {
+            <p><strong>Category:</strong> @Model.CategoryName</p>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.SupplierName))
+        {
+            <p><strong>Supplier:</strong> @Model.SupplierName</p>
+        }
+
+        <hr />
+
+        <h2 class="price mb-3">$@Model.Price.ToString("N2")</h2>
+
+        @if (Model.StockLevel > 0)
+        {
+            <div class="alert alert-success">
+                <strong>In Stock</strong> - @Model.StockLevel unit(s) available
+            </div>
+
+            <div class="mb-3">
+                @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("productId", Model.ProductID)
+                    <div class="input-group mb-3" style="max-width: 200px;">
+                        <input type="number" name="quantity" value="1" min="1" max="@Model.StockLevel" class="form-control" />
+                        <button type="submit" class="btn btn-success">Add to Cart</button>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                <strong>Out of Stock</strong>
+            </div>
+        }
+
+        <hr />
+
+        @if (!string.IsNullOrEmpty(Model.Specifications))
+        {
+            <h4>Specifications</h4>
+            <div class="card">
+                <div class="card-body">
+                    <pre style="white-space: pre-wrap; font-family: inherit;">@Model.Specifications</pre>
+                </div>
+            </div>
+        }
+
+        <div class="mt-4">
+            @Html.ActionLink("« Back to Products", "Index", "Products", null, new { @class = "btn btn-secondary" })
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h3>Product Features</h3>
+        <ul class="list-group">
+            <li class="list-group-item">? Manufacturer Warranty</li>
+            <li class="list-group-item">? Free Shipping on Orders Over $100</li>
+            <li class="list-group-item">? 30-Day Return Policy</li>
+            <li class="list-group-item">? Secure Payment Options</li>
+        </ul>
+    </div>
+</div>

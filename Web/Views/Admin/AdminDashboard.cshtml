@@ -1,0 +1,239 @@
+@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<style>
+    .admin-theme .card.bg-primary { background-color: #0d6efd !important; }
+    .admin-theme .card.bg-success { background-color: #198754 !important; }
+    .admin-theme .card.bg-warning { background-color: #ffc107 !important; }
+    .admin-theme .card.bg-info { background-color: #0dcaf0 !important; }
+    .admin-theme .card-header.bg-dark { background-color: #0a4275 !important; }
+    .admin-theme .btn-outline-primary { border-color: #0d6efd; color: #0d6efd; }
+    .admin-theme .btn-outline-primary:hover { background-color: #0d6efd; color: white; }
+</style>
+
+<div class="container-fluid admin-theme">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="fas fa-user-shield"></i> Admin Dashboard
+            </h2>
+            <p class="lead">Welcome back, <strong>@ViewBag.UserName</strong>! <span class="badge bg-primary">Administrator</span></p>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            @TempData["InfoMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Users</h6>
+                            <h2 class="card-title mb-0">@ViewBag.TotalUsers</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-users fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small>@ViewBag.ActiveUsers active users</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Products</h6>
+                            <h2 class="card-title mb-0">@ViewBag.TotalProducts</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-box fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small>@ViewBag.LowStockProducts low stock items</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Total Orders</h6>
+                            <h2 class="card-title mb-0">@ViewBag.TotalOrders</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-shopping-cart fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small>@ViewBag.PendingOrders pending orders</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Your Role</h6>
+                            <h2 class="card-title mb-0">@ViewBag.Role</h2>
+                        </div>
+                        <div>
+                            <i class="fas fa-user-shield fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small>Administrator</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts Section -->
+    @if (ViewBag.LowStockProducts > 0 || ViewBag.PendingOrders > 0)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Attention Required</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @if (ViewBag.LowStockProducts > 0)
+                            {
+                                <div class="col-md-6">
+                                    <div class="alert alert-warning mb-0">
+                                        <i class="fas fa-box"></i> <strong>@ViewBag.LowStockProducts</strong> product(s) have low stock levels (?10 units).
+                                        <a href="@Url.Action("Products", "Admin")" class="alert-link">View Products</a>
+                                    </div>
+                                </div>
+                            }
+                            @if (ViewBag.PendingOrders > 0)
+                            {
+                                <div class="col-md-6">
+                                    <div class="alert alert-info mb-0">
+                                        <i class="fas fa-shopping-cart"></i> <strong>@ViewBag.PendingOrders</strong> order(s) are waiting to be processed.
+                                        <a href="@Url.Action("Orders", "Admin")" class="alert-link">View Orders</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Quick Actions -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Users", "Admin")" class="btn btn-outline-primary btn-lg w-100">
+                                <i class="fas fa-users fa-2x mb-2"></i><br />
+                                Manage Users
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Products", "Admin")" class="btn btn-outline-success btn-lg w-100">
+                                <i class="fas fa-box fa-2x mb-2"></i><br />
+                                Manage Products
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Orders", "Admin")" class="btn btn-outline-warning btn-lg w-100">
+                                <i class="fas fa-shopping-cart fa-2x mb-2"></i><br />
+                                Manage Orders
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Privileges -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-crown"></i> Administrator Privileges</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-check-circle text-primary"></i> Full System Access:</h6>
+                            <ul>
+                                <li>Manage all user accounts (Create, Edit, Delete)</li>
+                                <li>Full product management (Create, Edit, Delete)</li>
+                                <li>Complete order management and control</li>
+                                <li>Access to all financial reports</li>
+                                <li>System configuration and settings</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-shield-alt text-primary"></i> Administrative Tools:</h6>
+                            <ul>
+                                <li>User role assignment and permissions</li>
+                                <li>Inventory and stock management</li>
+                                <li>Category and supplier management</li>
+                                <li>Business analytics and reporting</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert-dismissible').fadeOut('slow');
+        }, 5000);
+    </script>
+}
