@@ -72,7 +72,9 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container-fluid">
-            @Html.ActionLink("⚡ AWE Electronics", "Dashboard", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <a href="@Url.Action("Dashboard", "Home")" class="navbar-brand">
+                <i class="fas fa-bolt"></i> AWE Electronics
+            </a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                 <span class="navbar-toggler-icon"></span>
             </button>

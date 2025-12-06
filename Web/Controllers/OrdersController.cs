@@ -91,7 +91,7 @@ namespace Web.Controllers
         {
             try
             {
-                int userId = Session["UserId"] != null ? (int)Session["UserId"] : 0;
+                int userId = (Session["UserId"] as int?) ?? 0;
                 var result = _orderBLL.UpdateOrderStatus(orderId, newStatus, userId);
 
                 if (result.Success)
@@ -119,7 +119,7 @@ namespace Web.Controllers
         {
             try
             {
-                int userId = Session["UserId"] != null ? (int)Session["UserId"] : 0;
+                int userId = (Session["UserId"] as int?) ?? 0;
                 var result = _orderBLL.CancelOrder(orderId, userId);
 
                 if (result.Success)

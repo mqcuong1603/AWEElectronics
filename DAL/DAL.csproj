@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CategoryDAL.cs" />
+    <Compile Include="CustomerDAL.cs" />
     <Compile Include="DatabaseConfig.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="InventoryTransactionDAL.cs" />

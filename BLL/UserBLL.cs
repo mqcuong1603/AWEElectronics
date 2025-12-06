@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 using AWEElectronics.DAL;
 using AWEElectronics.DTO;
+using BCrypt.Net;
 
 namespace AWEElectronics.BLL
 {
@@ -50,12 +49,8 @@ namespace AWEElectronics.BLL
                 };
             }
 
-            // Verify password (using simple hash for demo - use BCrypt in production)
-            string hashedPassword = HashPassword(password);
-
-            // For demo purposes, also check against the stored hash directly
-            // In production, use proper password verification
-            if (user.PasswordHash != hashedPassword && !VerifyPassword(password, user.PasswordHash))
+            // Verify password using BCrypt
+            if (string.IsNullOrEmpty(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
                 return new LoginResult
                 {
@@ -116,8 +111,8 @@ namespace AWEElectronics.BLL
             if (existingUser != null)
                 return (false, "Username already exists.", 0);
 
-            // Hash password
-            user.PasswordHash = HashPassword(password);
+            // Hash password using BCrypt
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
             user.Status = user.Status ?? "Active";
 
             try
@@ -168,13 +163,13 @@ namespace AWEElectronics.BLL
             if (user == null)
                 return (false, "User not found.");
 
-            // Verify current password
-            if (!VerifyPassword(currentPassword, user.PasswordHash))
+            // Verify current password using BCrypt
+            if (string.IsNullOrEmpty(user.PasswordHash) || !BCrypt.Net.BCrypt.Verify(currentPassword, user.PasswordHash))
                 return (false, "Current password is incorrect.");
 
             try
             {
-                string newHash = HashPassword(newPassword);
+                string newHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
                 bool result = _userDAL.UpdatePassword(userId, newHash);
                 return result ? (true, "Password changed successfully.") : (false, "Failed to change password.");
             }
@@ -201,26 +196,6 @@ namespace AWEElectronics.BLL
         }
 
         // Helper methods
-        private string HashPassword(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
-        }
-
-        private bool VerifyPassword(string password, string storedHash)
-        {
-            string hash = HashPassword(password);
-            return hash.Equals(storedHash, StringComparison.OrdinalIgnoreCase);
-        }
-
         private bool IsValidEmail(string email)
         {
             try

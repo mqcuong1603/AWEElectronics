@@ -63,8 +63,14 @@ namespace Web.Controllers
             }
             catch (Exception ex)
             {
+                // In debug mode, show the actual error for troubleshooting
+                #if DEBUG
+                ViewBag.ErrorMessage = $"An error occurred during login: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}\nStack trace: {ex.StackTrace}");
+                #else
                 ViewBag.ErrorMessage = "An error occurred during login. Please try again.";
                 System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
+                #endif
                 return View();
             }
         }
