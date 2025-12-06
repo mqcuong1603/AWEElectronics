@@ -77,15 +77,22 @@ namespace AWEElectronics.DAL
 
         private Payment MapPayment(DataRow row)
         {
+            var paidAt = row["PaidAt"] != DBNull.Value ? Convert.ToDateTime(row["PaidAt"]) : (DateTime?)null;
+            var provider = row["Provider"].ToString();
+            var transactionRef = row["TransactionRef"]?.ToString();
+            
             return new Payment
             {
                 PaymentID = Convert.ToInt32(row["PaymentID"]),
                 OrderID = Convert.ToInt32(row["OrderID"]),
                 Amount = Convert.ToDecimal(row["Amount"]),
-                Provider = row["Provider"].ToString(),
+                Provider = provider,
+                PaymentMethod = provider, // Alias for Provider
                 Status = row["Status"].ToString(),
-                TransactionRef = row["TransactionRef"]?.ToString(),
-                PaidAt = row["PaidAt"] != DBNull.Value ? Convert.ToDateTime(row["PaidAt"]) : (DateTime?)null,
+                TransactionRef = transactionRef,
+                TransactionID = transactionRef, // Alias for TransactionRef
+                PaidAt = paidAt,
+                PaymentDate = paidAt ?? DateTime.Now, // Use PaidAt or current date
                 OrderCode = row.Table.Columns.Contains("OrderCode") ? row["OrderCode"]?.ToString() : null
             };
         }

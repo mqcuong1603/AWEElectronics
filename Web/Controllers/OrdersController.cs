@@ -54,36 +54,6 @@ namespace Web.Controllers
             }
         }
 
-        // GET: /Orders/Details/5
-        public ActionResult Details(int id)
-        {
-            try
-            {
-                Order order = _orderBLL.GetById(id);
-
-                if (order == null)
-                {
-                    ViewBag.ErrorMessage = "Order not found.";
-                    return View("Error");
-                }
-
-                // Get order details
-                order.OrderDetails = _orderBLL.GetOrderDetails(id);
-
-                // Get payment info
-                var payment = _orderBLL.GetPaymentByOrderId(id);
-                ViewBag.Payment = payment;
-
-                return View(order);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = "Error loading order details.";
-                System.Diagnostics.Debug.WriteLine($"Order Details error: {ex.Message}");
-                return View("Error");
-            }
-        }
-
         // POST: /Orders/UpdateStatus
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -109,7 +79,7 @@ namespace Web.Controllers
                 System.Diagnostics.Debug.WriteLine($"Update Status error: {ex.Message}");
             }
 
-            return RedirectToAction("Details", new { id = orderId });
+            return RedirectToAction("Index");
         }
 
         // POST: /Orders/Cancel
@@ -137,7 +107,7 @@ namespace Web.Controllers
                 System.Diagnostics.Debug.WriteLine($"Cancel Order error: {ex.Message}");
             }
 
-            return RedirectToAction("Details", new { id = orderId });
+            return RedirectToAction("Index");
         }
     }
 }

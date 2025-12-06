@@ -11,13 +11,15 @@ namespace AWEElectronics.DAL
         public List<Order> GetAll()
         {
             List<Order> orders = new List<Order>();
-            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail,
+            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail, c.Phone as CustomerPhone,
                             u.FullName as StaffName,
-                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress
+                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress,
+                            p.Status as PaymentStatus
                             FROM Orders o
                             LEFT JOIN Customers c ON o.CustomerID = c.CustomerID
                             LEFT JOIN Users u ON o.StaffCheckedID = u.UserID
                             LEFT JOIN Addresses a ON o.ShippingAddressID = a.AddressID
+                            LEFT JOIN Payments p ON o.OrderID = p.OrderID
                             ORDER BY o.OrderDate DESC";
 
             DataTable dt = DatabaseHelper.ExecuteQuery(query);
@@ -32,13 +34,15 @@ namespace AWEElectronics.DAL
         public List<Order> GetByStatus(string status)
         {
             List<Order> orders = new List<Order>();
-            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail,
+            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail, c.Phone as CustomerPhone,
                             u.FullName as StaffName,
-                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress
+                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress,
+                            p.Status as PaymentStatus
                             FROM Orders o
                             LEFT JOIN Customers c ON o.CustomerID = c.CustomerID
                             LEFT JOIN Users u ON o.StaffCheckedID = u.UserID
                             LEFT JOIN Addresses a ON o.ShippingAddressID = a.AddressID
+                            LEFT JOIN Payments p ON o.OrderID = p.OrderID
                             WHERE o.Status = @Status
                             ORDER BY o.OrderDate DESC";
 
@@ -55,13 +59,15 @@ namespace AWEElectronics.DAL
         public List<Order> GetByDateRange(DateTime startDate, DateTime endDate)
         {
             List<Order> orders = new List<Order>();
-            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail,
+            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail, c.Phone as CustomerPhone,
                             u.FullName as StaffName,
-                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress
+                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress,
+                            p.Status as PaymentStatus
                             FROM Orders o
                             LEFT JOIN Customers c ON o.CustomerID = c.CustomerID
                             LEFT JOIN Users u ON o.StaffCheckedID = u.UserID
                             LEFT JOIN Addresses a ON o.ShippingAddressID = a.AddressID
+                            LEFT JOIN Payments p ON o.OrderID = p.OrderID
                             WHERE o.OrderDate BETWEEN @StartDate AND @EndDate
                             ORDER BY o.OrderDate DESC";
 
@@ -80,13 +86,15 @@ namespace AWEElectronics.DAL
 
         public Order GetById(int orderId)
         {
-            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail,
+            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail, c.Phone as CustomerPhone,
                             u.FullName as StaffName,
-                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress
+                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress,
+                            p.Status as PaymentStatus
                             FROM Orders o
                             LEFT JOIN Customers c ON o.CustomerID = c.CustomerID
                             LEFT JOIN Users u ON o.StaffCheckedID = u.UserID
                             LEFT JOIN Addresses a ON o.ShippingAddressID = a.AddressID
+                            LEFT JOIN Payments p ON o.OrderID = p.OrderID
                             WHERE o.OrderID = @OrderID";
 
             SqlParameter[] parameters = { new SqlParameter("@OrderID", orderId) };
@@ -100,13 +108,15 @@ namespace AWEElectronics.DAL
 
         public Order GetByOrderCode(string orderCode)
         {
-            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail,
+            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail, c.Phone as CustomerPhone,
                             u.FullName as StaffName,
-                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress
+                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress,
+                            p.Status as PaymentStatus
                             FROM Orders o
                             LEFT JOIN Customers c ON o.CustomerID = c.CustomerID
                             LEFT JOIN Users u ON o.StaffCheckedID = u.UserID
                             LEFT JOIN Addresses a ON o.ShippingAddressID = a.AddressID
+                            LEFT JOIN Payments p ON o.OrderID = p.OrderID
                             WHERE o.OrderCode = @OrderCode";
 
             SqlParameter[] parameters = { new SqlParameter("@OrderCode", orderCode) };
@@ -175,8 +185,10 @@ namespace AWEElectronics.DAL
                 GrandTotal = Convert.ToDecimal(row["GrandTotal"]),
                 Status = row["Status"].ToString(),
                 OrderDate = Convert.ToDateTime(row["OrderDate"]),
+                PaymentStatus = row.Table.Columns.Contains("PaymentStatus") && row["PaymentStatus"] != DBNull.Value ? row["PaymentStatus"].ToString() : "Pending",
                 CustomerName = row.Table.Columns.Contains("CustomerName") ? row["CustomerName"]?.ToString() : null,
                 CustomerEmail = row.Table.Columns.Contains("CustomerEmail") ? row["CustomerEmail"]?.ToString() : null,
+                CustomerPhone = row.Table.Columns.Contains("CustomerPhone") ? row["CustomerPhone"]?.ToString() : null,
                 StaffName = row.Table.Columns.Contains("StaffName") ? row["StaffName"]?.ToString() : null,
                 ShippingAddress = row.Table.Columns.Contains("ShippingAddress") ? row["ShippingAddress"]?.ToString() : null
             };
