@@ -1,0 +1,126 @@
+@model AWEElectronics.DTO.User
+
+@{
+    ViewBag.Title = "User Details";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-user"></i> User Details</h2>
+        <p class="text-muted">View user information</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-id-card"></i> @Model.FullName</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">User ID:</dt>
+                    <dd class="col-sm-8">@Model.UserID</dd>
+
+                    <dt class="col-sm-4">Username:</dt>
+                    <dd class="col-sm-8"><strong>@Model.Username</strong></dd>
+
+                    <dt class="col-sm-4">Full Name:</dt>
+                    <dd class="col-sm-8">@Model.FullName</dd>
+
+                    <dt class="col-sm-4">Email:</dt>
+                    <dd class="col-sm-8">
+                        <a href="mailto:@Model.Email">@Model.Email</a>
+                    </dd>
+
+                    <dt class="col-sm-4">Phone:</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrEmpty(Model.Phone))
+                        {
+                            <span>@Model.Phone</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not provided</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">Role:</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge @(Model.Role == "Admin" ? "bg-danger" : Model.Role == "Staff" ? "bg-primary" : Model.Role == "Accountant" ? "bg-success" : "bg-info") fs-6">
+                            @Model.Role
+                        </span>
+                    </dd>
+
+                    <dt class="col-sm-4">Status:</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge @(Model.Status == "Active" ? "bg-success" : Model.Status == "Inactive" ? "bg-warning" : "bg-danger") fs-6">
+                            @Model.Status
+                        </span>
+                    </dd>
+
+                    <dt class="col-sm-4">Created Date:</dt>
+                    <dd class="col-sm-8">@Model.CreatedDate.ToString("MMMM dd, yyyy")</dd>
+
+                    <dt class="col-sm-4">Last Login:</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.LastLogin.HasValue)
+                        {
+                            @Model.LastLogin.Value.ToString("MMMM dd, yyyy HH:mm:ss")
+                        }
+                        else
+                        {
+                            <span class="text-muted">Never logged in</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <a href="@Url.Action("Index", "Users")" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="@Url.Action("Edit", "Users", new { id = Model.UserID })" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="@Url.Action("ChangePassword", "Users", new { id = Model.UserID })" class="btn btn-warning">
+                <i class="fas fa-key"></i> Change Password
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow mb-3">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="fas fa-shield-alt"></i> Security Info</h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <i class="fas fa-lock text-success"></i> Password is securely hashed
+                </p>
+                <p class="mb-0">
+                    <small class="text-muted">
+                        Passwords are encrypted using BCrypt for maximum security
+                    </small>
+                </p>
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="fas fa-cog"></i> Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="@Url.Action("Edit", "Users", new { id = Model.UserID })" class="btn btn-outline-primary">
+                        <i class="fas fa-edit"></i> Edit User
+                    </a>
+                    <a href="@Url.Action("ChangePassword", "Users", new { id = Model.UserID })" class="btn btn-outline-warning">
+                        <i class="fas fa-key"></i> Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -90,7 +90,7 @@ namespace Web.Controllers
         }
 
         // GET: /Account/Profile
-        public ActionResult Profile()
+        public new ActionResult Profile()
         {
             if (Session["UserId"] == null)
             {
