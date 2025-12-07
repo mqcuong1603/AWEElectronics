@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 using AWEElectronics.DAL;
 using AWEElectronics.DTO;
 
@@ -47,12 +45,8 @@ namespace AWEElectronics.BLL
                 };
             }
 
-            // Verify password (using simple hash for demo - use BCrypt in production)
-            string hashedPassword = HashPassword(password);
-
-            // For demo purposes, also check against the stored hash directly
-            // In production, use proper password verification
-            if (user.PasswordHash != hashedPassword && !VerifyPassword(password, user.PasswordHash))
+            // Verify password using BCrypt
+            if (!VerifyPassword(password, user.PasswordHash))
             {
                 return new LoginResult
                 {
@@ -197,25 +191,24 @@ namespace AWEElectronics.BLL
             }
         }
 
-        // Helper methods
+        // Helper methods - Using BCrypt for secure password hashing
         private string HashPassword(string password)
         {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
+            // Using work factor 12 to match database hashes ($2a$12$...)
+            return BCrypt.Net.BCrypt.HashPassword(password, 12);
         }
 
         private bool VerifyPassword(string password, string storedHash)
         {
-            string hash = HashPassword(password);
-            return hash.Equals(storedHash, StringComparison.OrdinalIgnoreCase);
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(password, storedHash);
+            }
+            catch
+            {
+                // Handle invalid hash format
+                return false;
+            }
         }
 
         private bool IsValidEmail(string email)

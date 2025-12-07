@@ -37,6 +37,19 @@ namespace AWEElectronics.BLL
             return _orderDAL.GetByDateRange(startDate, endDate);
         }
 
+        public List<Order> GetByCustomerId(int customerId)
+        {
+            List<Order> orders = _orderDAL.GetByCustomerId(customerId);
+            
+            // Load order details for each order
+            foreach (var order in orders)
+            {
+                order.OrderDetails = _orderDetailDAL.GetByOrderId(order.OrderID);
+            }
+            
+            return orders;
+        }
+
         public Order GetById(int orderId)
         {
             Order order = _orderDAL.GetById(orderId);

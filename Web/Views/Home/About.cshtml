@@ -1,9 +1,82 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "About Us";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <p>Use this area to provide additional information.</p>
-</main>
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12 text-center">
+            <h1 class="display-4 mb-3">About AWE Electronics</h1>
+            <p class="lead text-muted">Your Trusted Partner in Quality Electronics Since 2024</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h3 class="mb-3">Who We Are</h3>
+            <p>AWE Electronics is Australia's premier destination for cutting-edge technology and electronic products. We specialize in providing high-quality laptops, mobile phones, audio equipment, and gaming accessories to customers across the country.</p>
+            <p>Our mission is to make technology accessible to everyone while maintaining the highest standards of quality and customer service.</p>
+        </div>
+        <div class="col-md-6">
+            <h3 class="mb-3">What We Offer</h3>
+            <ul class="list-unstyled">
+                <li class="mb-2">✓ Wide selection of electronics from leading brands</li>
+                <li class="mb-2">✓ Competitive prices with regular promotions</li>
+                <li class="mb-2">✓ Fast and reliable shipping across Australia</li>
+                <li class="mb-2">✓ Comprehensive warranty on all products</li>
+                <li class="mb-2">✓ Expert customer support team</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h3 class="text-center mb-4">Our Product Categories</h3>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <div class="p-4 bg-light rounded">
+                <h1 class="text-primary">💻</h1>
+                <h5>Laptops & Computers</h5>
+                <p class="small text-muted">From everyday computing to high-performance workstations</p>
+            </div>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <div class="p-4 bg-light rounded">
+                <h1 class="text-primary">📱</h1>
+                <h5>Mobile Devices</h5>
+                <p class="small text-muted">Latest smartphones and tablets from top brands</p>
+            </div>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <div class="p-4 bg-light rounded">
+                <h1 class="text-primary">🎧</h1>
+                <h5>Audio Equipment</h5>
+                <p class="small text-muted">Premium headphones and speakers for audiophiles</p>
+            </div>
+        </div>
+        <div class="col-md-3 text-center mb-3">
+            <div class="p-4 bg-light rounded">
+                <h1 class="text-primary">🎮</h1>
+                <h5>Gaming Gear</h5>
+                <p class="small text-muted">Consoles, accessories, and peripherals for gamers</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center p-5">
+                    <h3>Why Choose AWE Electronics?</h3>
+                    <p class="mb-0">We're committed to providing exceptional service, competitive pricing, and the latest technology to meet all your electronic needs. Shop with confidence knowing you're backed by our quality guarantee and dedicated support team.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h4 class="mb-3">Ready to Explore?</h4>
+            @Html.ActionLink("Browse Our Products", "Index", "Products", null, new { @class = "btn btn-primary btn-lg" })
+        </div>
+    </div>
+</div>

@@ -78,6 +78,29 @@ namespace AWEElectronics.DAL
             return orders;
         }
 
+        public List<Order> GetByCustomerId(int customerId)
+        {
+            List<Order> orders = new List<Order>();
+            string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail,
+                            u.FullName as StaffName,
+                            CONCAT(a.AddressLine1, ', ', a.City, ', ', a.Country) as ShippingAddress
+                            FROM Orders o
+                            LEFT JOIN Customers c ON o.CustomerID = c.CustomerID
+                            LEFT JOIN Users u ON o.StaffCheckedID = u.UserID
+                            LEFT JOIN Addresses a ON o.ShippingAddressID = a.AddressID
+                            WHERE o.CustomerID = @CustomerID
+                            ORDER BY o.OrderDate DESC";
+
+            SqlParameter[] parameters = { new SqlParameter("@CustomerID", customerId) };
+            DataTable dt = DatabaseHelper.ExecuteQuery(query, parameters);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                orders.Add(MapOrder(row));
+            }
+            return orders;
+        }
+
         public Order GetById(int orderId)
         {
             string query = @"SELECT o.*, c.FullName as CustomerName, c.Email as CustomerEmail,
