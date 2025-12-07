@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36717.8
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desktop", "Desktop\Desktop.csproj", "{215D2622-7740-4522-ABC9-61ADC5B5154B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{1118BDF4-A42C-4F53-B43E-FD09066DFE5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL.Tests", "BLL.Tests\BLL.Tests.csproj", "{F5A3B1C2-D4E5-6F78-9A0B-1C2D3E4F5678}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{1118BDF4-A42C-4F53-B43E-FD09066DFE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1118BDF4-A42C-4F53-B43E-FD09066DFE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1118BDF4-A42C-4F53-B43E-FD09066DFE5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5A3B1C2-D4E5-6F78-9A0B-1C2D3E4F5678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5A3B1C2-D4E5-6F78-9A0B-1C2D3E4F5678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5A3B1C2-D4E5-6F78-9A0B-1C2D3E4F5678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5A3B1C2-D4E5-6F78-9A0B-1C2D3E4F5678}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
